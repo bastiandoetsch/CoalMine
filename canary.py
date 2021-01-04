@@ -12,6 +12,15 @@ import requests
 import subprocess
 import configparser
 
+def get_datestr():
+    now = datetime.datetime.now()
+    month, day, year = datetime.datetime.strftime(now, '%B %d %Y').split()
+    day = int(day)
+    if 4 <= day <= 20 or 24 <= day <= 30:
+        suffix = 'th'
+    else:
+        suffix = ['st', 'nd', 'rd'][day % 10 - 1]
+    return '%s %d%s, %s' % (month, day, suffix, year)
 
 '''Lookup sysarg and corresponding vpn_link/ vpn_canary in .ini file'''
 def lookup(arg):
@@ -26,11 +35,19 @@ def lookup(arg):
 
     try:
         link = config[arg]['link']
-        canary = list(config[arg]['canary'].split('\n'))
+        canary = [
+    'As of <span>%s</span> we state the following:' % get_datestr(),
+    'We have NOT received any National Security letters;',
+    'We have NOT received any gag orders;',
+    'We have NOT received any warrants from any government organization.',
+    (u'We are 100% committed to our zero-logs policy – we never log the '
+      'activities of our users to ensure their ultimate privacy and security.')]
         check_canary(link, canary)
     except KeyError:
         print('Error reading value. Did you provide a valid flag?')
 
+
+        
 '''Check appropriate website for statements'''
 def check_canary(vpn_link, vpn_canary):
     res = requests.get(vpn_link)
