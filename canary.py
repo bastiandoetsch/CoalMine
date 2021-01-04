@@ -15,13 +15,7 @@ import datetime
 
 def get_datestr():
     now = datetime.datetime.now()
-    month, day, year = datetime.datetime.strftime(now, '%B %d %Y').split()
-    day = int(day)
-    if 4 <= day <= 20 or 24 <= day <= 30:
-        suffix = 'th'
-    else:
-        suffix = ['st', 'nd', 'rd'][day % 10 - 1]
-    return '%s %d%s, %s' % (month, day, suffix, year)
+    return datetime.datetime.strftime(now, '%Y-%m-%d')        
 
 '''Lookup sysarg and corresponding vpn_link/ vpn_canary in .ini file'''
 def lookup(arg):
